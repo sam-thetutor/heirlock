@@ -1,0 +1,35 @@
+// Version: 1.0.0
+type AccountStatus__68254060 = {#active; #frozen; #inactive; #inherited};
+type Allocation__354027783 = {#percentage : Nat};
+type BitcoinAddress__998564417 = Text;
+type HeirId__111219494 = Nat;
+type Heir__437731408 =
+  {
+    added_at : Timestamp__867138818;
+    allocation : Allocation__354027783;
+    bitcoin_address : BitcoinAddress__998564417;
+    id : HeirId__111219494
+  };
+type Heir__746774246 = Heir__437731408;
+type TimerId__152224488 = Nat;
+type Timestamp__867138818 = Nat64;
+type UserProfile__18899329 = UserProfile__331109641;
+type UserProfile__331109641 =
+  {
+    account_status : AccountStatus__68254060;
+    bitcoin_address : ?BitcoinAddress__998564417;
+    created_at : Timestamp__867138818;
+    derivation_path : [[Nat8]];
+    inactivity_period_days : Nat;
+    last_activity : Timestamp__867138818;
+    last_bitcoin_activity : ?Timestamp__867138818;
+    last_login : Timestamp__867138818;
+    principal : Principal
+  };
+actor {
+  stable NETWORK : {#mainnet; #regtest; #testnet};
+  stable var heirs_stable : [(Principal, [Heir__746774246])];
+  stable var is_scheduler_running : Bool;
+  stable var timer_id : ?TimerId__152224488;
+  stable var users_stable : [(Principal, UserProfile__18899329)]
+};

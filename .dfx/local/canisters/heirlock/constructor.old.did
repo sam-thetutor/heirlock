@@ -1,0 +1,97 @@
+type UserStatus = 
+ record {
+   bitcoin_balance: opt Satoshi;
+   days_since_activity: nat;
+   days_until_inheritance: opt nat;
+   is_inactive: bool;
+   profile: UserProfile;
+ };
+type UserProfile = 
+ record {
+   account_status: AccountStatus;
+   bitcoin_address: opt BitcoinAddress;
+   created_at: Timestamp;
+   derivation_path: vec vec nat8;
+   inactivity_period_days: nat;
+   last_activity: Timestamp;
+   last_bitcoin_activity: opt Timestamp;
+   last_login: Timestamp;
+   "principal": principal;
+ };
+type Timestamp = nat64;
+type Satoshi = nat64;
+type Result_2 = 
+ variant {
+   err: text;
+   ok: HeirId;
+ };
+type Result_1 = 
+ variant {
+   err: text;
+   ok: InheritanceResult;
+ };
+type Result = 
+ variant {
+   err: text;
+   ok;
+ };
+type Network = 
+ variant {
+   mainnet;
+   regtest;
+   testnet;
+ };
+type InheritanceResult = 
+ record {
+   execution_timestamp: Timestamp;
+   fees_paid: Satoshi;
+   heir_count: nat;
+   total_distributed: Satoshi;
+   transaction_ids: vec text;
+ };
+type InactivityStatus = 
+ record {
+   can_trigger_inheritance: bool;
+   is_active: bool;
+   seconds_since_activity: nat;
+   seconds_until_inheritance: opt nat;
+ };
+type HeirId = nat;
+type Heir = 
+ record {
+   added_at: Timestamp;
+   allocation: Allocation;
+   bitcoin_address: BitcoinAddress;
+   id: HeirId;
+ };
+type BitcoinAddress = text;
+type Allocation = variant {percentage: nat;};
+type AddHeirRequest = 
+ record {
+   allocation_percentage: nat;
+   bitcoin_address: BitcoinAddress;
+ };
+type AccountStatus = 
+ variant {
+   active;
+   frozen;
+   inactive;
+   inherited;
+ };
+service : {
+  add_heir: (request: AddHeirRequest) -> (Result_2);
+  check_and_trigger_inheritance: () -> (Result_1);
+  generate_bitcoin_address: () -> (BitcoinAddress);
+  get_balance: () -> (Satoshi);
+  get_bitcoin_address: () -> (opt BitcoinAddress);
+  get_heirs: () -> (vec Heir);
+  get_inactivity_status: () -> (opt InactivityStatus);
+  get_profile: () -> (opt UserProfile);
+  get_total_allocation: () -> (nat);
+  get_user_status: () -> (opt UserStatus);
+  heartbeat: () -> ();
+  login: () -> (UserProfile);
+  remove_heir: (heir_id: HeirId) -> (Result);
+  set_inactivity_period: (seconds: nat) -> (Result);
+  trigger_inheritance_check: () -> ();
+}

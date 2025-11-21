@@ -1,0 +1,81 @@
+type AccountStatus = variant { active; inherited; inactive; frozen };
+type AddHeirRequest = record {
+  bitcoin_address : BitcoinAddress;
+  allocation_percentage : nat;
+};
+type Allocation = variant { percentage : nat };
+type BitcoinAddress = text;
+type BlockHash = blob;
+type GetUtxosResponse = record {
+  next_page : opt Page;
+  tip_height : nat32;
+  tip_block_hash : BlockHash;
+  utxos : vec Utxo;
+};
+type Heir = record {
+  id : HeirId;
+  bitcoin_address : BitcoinAddress;
+  added_at : Timestamp;
+  allocation : Allocation;
+};
+type HeirId = nat;
+type HeirLock = service {
+  add_heir : (AddHeirRequest) -> (Result_2);
+  check_and_trigger_inheritance : () -> (Result_1);
+  generate_bitcoin_address : () -> (BitcoinAddress);
+  get_address_balance : (text) -> (Satoshi);
+  get_address_utxos : (text) -> (GetUtxosResponse);
+  get_balance : () -> (Satoshi);
+  get_bitcoin_address : () -> (opt BitcoinAddress);
+  get_heirs : () -> (vec Heir);
+  get_inactivity_status : () -> (opt InactivityStatus);
+  get_profile : () -> (opt UserProfile);
+  get_total_allocation : () -> (nat);
+  get_user_status : () -> (opt UserStatus);
+  heartbeat : () -> ();
+  login : () -> (UserProfile);
+  remove_heir : (HeirId) -> (Result);
+  set_inactivity_period : (nat) -> (Result);
+  trigger_inheritance_check : () -> ();
+};
+type InactivityStatus = record {
+  seconds_since_activity : nat;
+  seconds_until_inheritance : opt nat;
+  can_trigger_inheritance : bool;
+  is_active : bool;
+};
+type InheritanceResult = record {
+  execution_timestamp : Timestamp;
+  transaction_ids : vec text;
+  heir_count : nat;
+  total_distributed : Satoshi;
+  fees_paid : Satoshi;
+};
+type Network = variant { mainnet; regtest; testnet };
+type OutPoint = record { txid : blob; vout : nat32 };
+type Page = blob;
+type Result = variant { ok; err : text };
+type Result_1 = variant { ok : InheritanceResult; err : text };
+type Result_2 = variant { ok : HeirId; err : text };
+type Satoshi = nat64;
+type Timestamp = nat64;
+type UserProfile = record {
+  last_login : Timestamp;
+  "principal" : principal;
+  bitcoin_address : opt BitcoinAddress;
+  inactivity_period_days : nat;
+  derivation_path : vec blob;
+  created_at : Timestamp;
+  last_activity : Timestamp;
+  last_bitcoin_activity : opt Timestamp;
+  account_status : AccountStatus;
+};
+type UserStatus = record {
+  bitcoin_balance : opt Satoshi;
+  days_since_activity : nat;
+  days_until_inheritance : opt nat;
+  is_inactive : bool;
+  profile : UserProfile;
+};
+type Utxo = record { height : nat32; value : Satoshi; outpoint : OutPoint };
+service : HeirLock
