@@ -1778,3 +1778,4 @@ CTransaction(hash=95fd87721d, ver=2, vin.size=1, vout.size=2, nLockTime=443)
 2025-11-21T00:00:22Z UpdateTip: new best=5bd87557a24fb00dd66990bc9f92c190f0082d7584a71ec395980ce9217a2c9f height=444 version=0x20000000 log2_work=9.797662 tx=458 date='2025-11-21T00:00:22Z' progress=1.000000 cache=0.3MiB(453txo)
 2025-11-21T00:00:22Z [testwallet] AddToWallet 9308bfcecdcd594e3e13465ac427993c23dfcfa9ebbaf0694edbf61766f12ee1  new Confirmed (block=5bd87557a24fb00dd66990bc9f92c190f0082d7584a71ec395980ce9217a2c9f, height=444, index=0)
 2025-11-21T00:00:22Z [testwallet] AddToWallet 95fd87721d61a709d6d4d4f4eed0c32b8d87cfb0e2373d62f58e0c625fdc2fcd  update Confirmed (block=5bd87557a24fb00dd66990bc9f92c190f0082d7584a71ec395980ce9217a2c9f, height=444, index=1)
+2025-11-21T00:32:15Z Flushed fee estimates to fee_estimates.dat.
